@@ -13,7 +13,7 @@ public:
     void displayMenu();
     void getExistingPlayers();
     void writeExistingPlayers();
-    void displayExistingPlayers(); 
+    void displayExistingPlayers();
 
     const vector<string> choosePlayer() const;
     void addPlayer();

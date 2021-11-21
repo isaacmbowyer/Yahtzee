@@ -38,7 +38,7 @@ void PlayerManagement::start() {
         // Detect what option the user chose an run it 
         switch (chosenOption) {
         case 1: {
-            vector<string> chosenPlayer = choosePlayer();
+            // logIn(); 
             break;
         }
         case 2:
@@ -120,7 +120,7 @@ void PlayerManagement::displayExistingPlayers() {
     cout << endl;
 }
 
-
+// Get the user to input a players username and password 
 const vector<string> PlayerManagement::choosePlayer() const {
     string username;
     string password;
@@ -142,7 +142,10 @@ const vector<string> PlayerManagement::choosePlayer() const {
 
 }
 
-// Remove a player 
+
+
+
+// Remove a player from the players vector 
 void PlayerManagement::removePlayer() {
     // Get the player username and password 
     vector<string> player = choosePlayer();
@@ -163,7 +166,7 @@ void PlayerManagement::removePlayer() {
     }
 }
 
-// Add a new player 
+// Add a new player to the players vector 
 void PlayerManagement::addPlayer() {
     // Get the player username and password 
     vector<string> player = choosePlayer();
