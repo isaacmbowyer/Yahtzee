@@ -140,14 +140,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerHistory.cpp" />
     <ClCompile Include="PlayerManagement.cpp" />
+    <ClCompile Include="ScoreCard.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerHistory.h" />
     <ClInclude Include="PlayerManagement.h" />
+    <ClInclude Include="ScoreCard.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Hulk.csv" />
     <None Include="players.csv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

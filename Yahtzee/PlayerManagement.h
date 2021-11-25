@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <iostream>
+#include <iostream>
 #include <algorithm>
 #include "Player.h"
 using namespace std;
@@ -15,12 +16,13 @@ public:
     void writeExistingPlayers();
     void displayExistingPlayers();
 
-    const vector<string> choosePlayer() const;
+    const vector<string> getPlayerData() const;
+    void choosePlayer();
     void addPlayer();
     void removePlayer();
 
-    friend inline bool sortByHighScore(const Player* lhs, const Player* rhs);
-    friend inline bool sortByUsername(const Player* lhs, const Player* rhs);
+    friend bool sortByHighScore(const Player* lhs, const Player* rhs);
+    friend bool sortByUsername(const Player* lhs, const Player* rhs);
 
 
     friend istream& operator>>(istream& is, PlayerManagement& management);
@@ -32,11 +34,11 @@ private:
 };
 
 // Sort Player vector by high score 
-bool sortByHighScore(const Player* lhs, const Player* rhs) {
+inline bool sortByHighScore(const Player* lhs, const Player* rhs) {
     return *(lhs) < *(rhs); // operator overload 
 }
 
 // Sort Player vector alphabetically
-bool sortByUsername(const Player* lhs, const Player* rhs) {
+inline bool sortByUsername(const Player* lhs, const Player* rhs) {
     return (strcmp(lhs->getUsername(), rhs->getUsername()) < 0);
 }

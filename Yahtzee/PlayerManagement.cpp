@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <fstream>
 #include <ostream>
+#include "PlayerHistory.h"
 
 PlayerManagement::PlayerManagement() {
     // Store player objects as a vector of pointers to vechiles
@@ -22,6 +23,7 @@ PlayerManagement::~PlayerManagement() {
 
 void PlayerManagement::start() {
     // Load exisiting players from file 
+
     getExistingPlayers();
 
     int chosenOption;  // Store player input 
@@ -38,7 +40,7 @@ void PlayerManagement::start() {
         // Detect what option the user chose an run it 
         switch (chosenOption) {
         case 1: {
-            // logIn(); 
+            choosePlayer(); 
             break;
         }
         case 2:
@@ -121,7 +123,7 @@ void PlayerManagement::displayExistingPlayers() {
 }
 
 // Get the user to input a players username and password 
-const vector<string> PlayerManagement::choosePlayer() const {
+const vector<string> PlayerManagement::getPlayerData() const {
     string username;
     string password;
 
@@ -142,13 +144,38 @@ const vector<string> PlayerManagement::choosePlayer() const {
 
 }
 
+// Gets the user to pick a player from the vector 
+void  PlayerManagement::choosePlayer() {
+    // Get the player username and password 
+    vector<string> player = getPlayerData();
 
+    int index = -1; // added to 0 at the lambda 
+    // Using a find_if algorithm and a lamda expression to find the first match where a player in the vector is equal to our inputted player 
+    vector<Player*>::iterator it = find_if(players->begin(), players->end(), [&player, &index](Player* currentPlayer) { // pass in the index so we know where the player is located 
+        ++index; // go to the next index 
+      
+         // Get the username and password from the vector and compare with current player from vector 
+        return (*currentPlayer == player.at(0).c_str()) && (*currentPlayer == player.at(1));  // operater overloading 
+    });
+
+    if (it != players->end()) {
+        // Get player history  
+        PlayerManagement* management = new PlayerManagement(); 
+        management->start(); 
+    }
+
+    else {
+        // Error Message, could not found player
+        cout << "Invalid username or password" << endl;
+    }
+
+}
 
 
 // Remove a player from the players vector 
 void PlayerManagement::removePlayer() {
     // Get the player username and password 
-    vector<string> player = choosePlayer();
+    vector<string> player = getPlayerData();
 
     // Using a find_if algorithm and a lamda expression to find the first match where a player in the vector is equal to our inputted player to delete 
     vector<Player*>::iterator it = find_if(players->begin(), players->end(), [&player](Player* currentPlayer) { 
@@ -169,7 +196,7 @@ void PlayerManagement::removePlayer() {
 // Add a new player to the players vector 
 void PlayerManagement::addPlayer() {
     // Get the player username and password 
-    vector<string> player = choosePlayer();
+    vector<string> player = getPlayerData();
 
     // Using a find_if algorithm and a lamda expression to find the first match where if a players whose username is equal to our inputted username, it will be invalid 
     vector<Player*>::iterator it = find_if(players->begin(), players->end(), [&player](Player* currentPlayer) {
@@ -189,7 +216,7 @@ void PlayerManagement::addPlayer() {
 
 
 
-// Retrieve and set all the player's data from the file 
+// Retrieve and set all the playe's history data from the file 
 istream& operator>>(istream& is, PlayerManagement& management) {
     string username;
     string password;
