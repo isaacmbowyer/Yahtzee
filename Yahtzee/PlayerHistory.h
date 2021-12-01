@@ -1,20 +1,26 @@
 #pragma once
 #include "Player.h"
+#include "ScoreCard.h"
 class PlayerHistory
 {
 public:
-    PlayerHistory(string& playerFile); 
+    PlayerHistory(Player* player); 
     ~PlayerHistory();
     void start(); 
-    void getPlayerHistoryData(); 
+    void gameHistoryMain();
+    void getPlayerStats(); 
     void displayMenu() const;
+    void displayGameHistoryMenu(int ptr) const;
     void displayPlayerHistory() const;
+
+    void getScoreCards(); 
     friend istream& operator>>(istream& is, PlayerHistory& history);
 private:
     Player* player; 
-    int** scoreCards;  // stores the scorecards for the player in a 2D array
-    int*  historyData; // stores the historic history data from player
-    const string PLAYER_FILE;
+    double* gameHistory; 
+    ScoreCard** scoreCards; 
+    const string PLAYER_FILE = "Hulk.csv";
     static const int MAX_HISTORIC_DATA;
+    static int HELLO; 
 };
 

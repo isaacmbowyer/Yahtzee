@@ -6,14 +6,14 @@ class ScoreCard
 {
 public:
     inline ScoreCard(); 
-    void displayScoreCard();
-    friend istream& operator>>(istream& is, ScoreCard& card);
+    void displayScoreCard() const;
+    friend istream& operator>>(istream& is, ScoreCard& scoreCard);
 private:
     int* scores;
-    static const int MAX_SCORES; 
+    static const int MAX_SCORES;
 };
 
 
 inline ScoreCard::ScoreCard() {
-    scores = (int*)calloc(MAX_SCORES, sizeof(int)); // stores all the scores of the scorecard in a heap array
+    scores = (int*) calloc(MAX_SCORES, sizeof(int)); // stores all the scores of the scorecard in a heap array, defaulted to 0 
 }

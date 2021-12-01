@@ -4,28 +4,33 @@
 #include <iostream>
 using namespace std;
 
-const int ScoreCard::MAX_SCORES = 6; 
+const int ScoreCard::MAX_SCORES = 7; 
 
 // Display the score card to the user 
-void ScoreCard::displayScoreCard() {
-
+void ScoreCard::displayScoreCard() const {
+    cout << endl;
+    cout << "----- SCORECARD -----" << endl; 
+    cout << "Aces: " << scores[0] << endl; 
+    cout << "Twos: " << scores[1] << endl;
+    cout << "Threes: " << scores[2] << endl;
+    cout << "Fours: " << scores[3] << endl;
+    cout << "Fives: " << scores[4] << endl;
+    cout << "Sixes: " << scores[5] << endl;
+    cout << "---------------------" << endl;
+    cout << "Total:" << scores[6] << endl; 
+    cout << "---------------------" << endl;
+    cout << endl;
 }
 
-// Retrieve and set all the score cards from the file 
 istream& operator>>(istream& is, ScoreCard& scoreCard) {
     char deliminator;
-
-    // Retrieve all the scores from the file 
-    for (int i = 0; i < ScoreCard::MAX_SCORES; i++) { // use for loop to reduce repeating code 
-        is >> scoreCard.scores[i]; // get the file and put it into the array
-        is.get(deliminator);  // get the deliminator 
+    // Loop through the Score Array and set each score value 
+    for (int i = 0; i < ScoreCard::MAX_SCORES; i++) {
+        is >> scoreCard.scores[i]; // set and retrieve value 
+        is.get(deliminator); // get the deliminator 
     }
-
-    // Calculate the total 
-    
-
-    // Retrieve the time_stamp 
-
-
-    return is; 
+  
+    return is;
 }
+
+

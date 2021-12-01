@@ -22,8 +22,10 @@ PlayerManagement::~PlayerManagement() {
 }
 
 void PlayerManagement::start() {
-    // Load exisiting players from file 
+    cout << "Welcome to Champion Yahtzee" << endl;
+    cout << "---------------------------" << endl;
 
+    // Load exisiting players from file 
     getExistingPlayers();
 
     int chosenOption;  // Store player input 
@@ -40,19 +42,24 @@ void PlayerManagement::start() {
         // Detect what option the user chose an run it 
         switch (chosenOption) {
         case 1: {
+            // choose a player
             choosePlayer(); 
             break;
         }
         case 2:
+            // add a player to the vector
             addPlayer();
             break;
         case 3:
+            // remove a player from the vector 
             removePlayer();
             break;
         case 4:
+            // sort by username
             sort(players->begin(), players->end(), sortByUsername);
             break;
         case 5:
+            // sort by high score 
             sort(players->begin(), players->end(), sortByHighScore);
             break;
         }
@@ -160,8 +167,8 @@ void  PlayerManagement::choosePlayer() {
 
     if (it != players->end()) {
         // Get player history  
-        PlayerManagement* management = new PlayerManagement(); 
-        management->start(); 
+        PlayerHistory* playerHistory = new PlayerHistory(players->at(index));
+        playerHistory->start(); 
     }
 
     else {

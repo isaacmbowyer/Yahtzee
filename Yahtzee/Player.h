@@ -13,6 +13,7 @@ public:
     void decryptPassword();
     void display() const;
     void displayAux() const;
+
     const char* getUsername() const;
 
     const bool operator==(const char* username) const;
@@ -51,7 +52,7 @@ inline void Player::display() const {
 inline void Player::displayAux() const {
     cout << "Welcome to Champion Yahtzee " << username << endl;
     cout << "-----------------------------------" << endl;
-    cout << "Highest Score:" << highScore << endl;
+    cout << "Highest Score: " << highScore << endl;
 }
 
 // Return the player username 
