@@ -54,7 +54,11 @@ void PlayerHistory::gameHistoryMain() {
     ScoreCard* scoreCard;
     do {
         scoreCard = scoreCards[gamePtr - 1]; // We need to base it of the index
-        scoreCard->displayScoreCard(); 
+        
+        // Display the Game Number, ScoreCard and its timestamp 
+        scoreCard->displayScoreCard(gamePtr, gameHistory[0]); 
+
+
         displayGameHistoryMenu(gamePtr);  
 
         // Get user option 
@@ -129,22 +133,23 @@ void PlayerHistory::getPlayerStats() {
 // Get all the scorecards for the chosen player
 void PlayerHistory::getScoreCards() {
     ifstream input(PLAYER_FILE);
-    
-    input.ignore('\n'); // Ignore the first line as we have already read it 
 
-    // We already know that file exists 
-    for (int i = 0; i < gameHistory[0]; i++) {
-        // Create a Scorecard
-        ScoreCard* scoreCard = new ScoreCard();
+    string text;
+    getline(input, text, '\n'); // ignore the first line as we have already read it 
 
-        // Set the data for the scoreCard 
-        input >> *scoreCard; 
+    if (input.is_open()) {
+        for (int i = 0; i < gameHistory[0]; i++) {
+            // Create a Scorecard
+            ScoreCard* scoreCard = new ScoreCard();
 
-        // Add it to the Array of pointer to Scorecards 
-        scoreCards[i] = scoreCard; 
+            // Set the data for the scoreCard 
+            input >> *scoreCard;
+
+            // Add it to the Array of pointer to Scorecards 
+            scoreCards[i] = scoreCard;
+        }
     }
 }
-
 // Retrieve and set all the player's game history data from the file (Number of Games, Accumulated and Average Score)
 istream& operator>>(istream& is, PlayerHistory& history) {
     char deliminator;

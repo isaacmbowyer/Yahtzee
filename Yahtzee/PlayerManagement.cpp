@@ -1,9 +1,8 @@
 #include "PlayerManagement.h"
+#include "PlayerHistory.h"
 #include <iomanip>
 #include <fstream>
 #include <ostream>
-#include "PlayerHistory.h"
-
 PlayerManagement::PlayerManagement() {
     // Store player objects as a vector of pointers to vechiles
     players = new vector<Player*>; 
@@ -23,7 +22,7 @@ PlayerManagement::~PlayerManagement() {
 
 void PlayerManagement::start() {
     cout << "Welcome to Champion Yahtzee" << endl;
-    cout << "---------------------------" << endl;
+    cout << "---------------------------" << endl << endl;
 
     // Load exisiting players from file 
     getExistingPlayers();
@@ -133,7 +132,7 @@ void PlayerManagement::displayExistingPlayers() {
 const vector<string> PlayerManagement::getPlayerData() const {
     string username;
     string password;
-
+  
     // Get the username 
     cout << "Please enter player username: ";
     getline(cin, username);

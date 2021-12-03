@@ -2,8 +2,8 @@
 
 Player::Player(string& username, string& password, int highScore) : highScore(highScore) {
     // Allocate memory for username and password 
-    this->username = (char*)malloc(sizeof(char) * (username.length() + 1));
-    this->password = (char*)malloc(sizeof(char) * (password.length() + 1));
+    this->username = (char*) malloc(sizeof(char) * (username.length() + 1));
+    this->password = (char*) malloc(sizeof(char) * (password.length() + 1));
 
     // Copy username and password into the required length of the cstring 
     strcpy_s(this->username, username.length() + 1, username.c_str());
