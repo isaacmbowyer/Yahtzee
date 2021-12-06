@@ -14,6 +14,7 @@ public:
     void getExistingPlayers();
     void writeExistingPlayers();
     void displayExistingPlayers();
+    void freeMemory();
 
     const vector<string> getPlayerData() const;
     void choosePlayer();
@@ -23,14 +24,15 @@ public:
     friend bool sortByHighScore(const Player* lhs, const Player* rhs);
     friend bool sortByUsername(const Player* lhs, const Player* rhs);
 
-
-    friend istream& operator>>(istream& is, PlayerManagement& management);
-
+    friend ostream& operator<<(ostream& os, PlayerManagement& management);
+    friend istream& operator>>(istream& is, PlayerManagement& management); 
+    friend istream& operator>>(istream& is, int* numberOfPlayers);
 
 private:
    vector<Player*>* players;
    const string PLAYERS_FILE = "players.csv";
 };
+
 
 // Sort Player vector by high score 
 inline bool sortByHighScore(const Player* lhs, const Player* rhs) {
@@ -40,4 +42,28 @@ inline bool sortByHighScore(const Player* lhs, const Player* rhs) {
 // Sort Player vector alphabetically
 inline bool sortByUsername(const Player* lhs, const Player* rhs) {
     return (strcmp(lhs->getUsername(), rhs->getUsername()) < 0);
+}
+
+// Free memory
+inline void PlayerManagement::freeMemory() {
+    delete this; 
+}
+
+// Gets the number of players in the csv file 
+inline istream& operator>>(istream& is, int* numberOfPlayers) {
+    is >> *numberOfPlayers; 
+    
+    // Go onto the next line
+    char newLine;
+    is.get(newLine);
+    return is;
+}
+
+// Write the number of players to the csv file
+inline ostream& operator<<(ostream& os, PlayerManagement& management) {
+    int numberOfPlayers = management.players->size();  // get number of players
+
+    os << numberOfPlayers << endl; // write it to the file 
+
+    return os;
 }

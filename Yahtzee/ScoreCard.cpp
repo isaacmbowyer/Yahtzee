@@ -3,42 +3,44 @@
 #include <ostream>
 
 
-const int ScoreCard::MAX_SCORES = 7; 
+const int ScoreCard::MAX_SCORES = 7;
 
+// Display the scorecard, game number and the date for an ALREADY existing game history 
 void ScoreCard::displayScoreCard(int gameNumber, const int MAX_GAMES) const {
     // Display the Game Number 
     cout << "Game: " << gameNumber << " of " << MAX_GAMES << endl;
 
     // Display the Date 
-    cout << "Date: " << timebuf << endl; 
+    cout << "Date: " << timebuf << endl;
 
     // Display the ScoreCard 
     cout << endl;
     cout << "----- SCORECARD -----" << endl;
-    cout << "Aces: " << scores[0] << endl;
-    cout << "Twos: " << scores[1] << endl;
-    cout << "Threes: " << scores[2] << endl;
-    cout << "Fours: " << scores[3] << endl;
-    cout << "Fives: " << scores[4] << endl;
-    cout << "Sixes: " << scores[5] << endl;
-    
+    cout << "Aces:     " << scores[0] << endl;
+    cout << "Twos:     " << scores[1] << endl;
+    cout << "Threes:   " << scores[2] << endl;
+    cout << "Fours:    " << scores[3] << endl;
+    cout << "Fives:    " << scores[4] << endl;
+    cout << "Sixes:    " << scores[5] << endl;
+
     // Print the total 
-    displayTotal(); 
+    displayTotal();
     cout << endl;
 }
 
+// Display just the scorecard for a game that is being CREATED 
 void ScoreCard::displayScoreCard() const {
     string values[6] = { "Aces", "Twos", "Threes", "Fours", "Fives", "Sixes" };
-    
+
     cout << endl;
     cout << "----- SCORECARD -----" << endl;
     for (int i = 0; i < MAX_SCORES - 1; i++) {
-        
-        // Print the Value out
-        cout << values[i] << ": "; 
 
-        // If the score is equal to NULL, then do not print the value out as it has not been set
-        if (scores[i] != NULL) {
+        // Print the Value out
+        cout << values[i] << ": ";
+
+        // If the score is not equal to -1, then do not print the value out as it has not been set
+        if (scores[i] != -1) {
             cout << scores[i];
         }
 
@@ -47,13 +49,14 @@ void ScoreCard::displayScoreCard() const {
 
     // Print the total 
     displayTotal();
-  
+
     cout << endl;
 }
 
+// Read the time stamp scorecard
 istream& operator>>(istream& is, ScoreCard& scoreCard) {
     // Get the scores
-    char deliminator; 
+    char deliminator;
     for (int i = 0; i < scoreCard.MAX_SCORES; i++) {
         is >> scoreCard.scores[i];
         is.get(deliminator);

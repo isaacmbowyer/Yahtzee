@@ -1,29 +1,46 @@
 #pragma once
+#include "Dice.h"
 #include "ScoreCard.h"
+#include <algorithm>
+#include <vector>"
 class GameManagement
 {
 public:
     GameManagement(); 
     ~GameManagement();
-    void start(); 
+    ScoreCard& start();
     void displayDiceFaces(const int line);
     void displayOptions() const; 
-    void setDefaultValues(); 
-    void rollDice();
     const int getScoreOption();
-    void toggleDice();
+    void rollAllDice();
+    void getInputToToggleDice();
+    void resetAllDice(); 
+
+    void freeMemory();
 private:
     ScoreCard* scoreCard;
-    int* diceValues; 
-    bool* lockedDices;
+    vector<Dice*>* dices;
     static const int MAX_DICES; 
     static const int MAX_TURNS; 
     static const int MAX_ROLLS; 
 };
 
-// Sets every locked dice to be false  at the start
-inline void GameManagement::setDefaultValues() {
-    for (int i = 0; i < MAX_DICES; i++) {
-        lockedDices[i] = false; 
-    }
+// Roll all dices
+inline void GameManagement::rollAllDice() {
+    for_each(dices->begin(), dices->end(), [](Dice* dice) {
+        dice->roll(); 
+    });
+}
+
+// Loop through the dice to unlock them 
+inline void GameManagement::resetAllDice() {
+    for_each(dices->begin(), dices->end(), [](Dice* dice) {
+        // Unlock the dice 
+        dice->toggleDice(false);
+    });
+}
+
+// Free memory 
+inline void GameManagement::freeMemory() {
+    delete this;
 }

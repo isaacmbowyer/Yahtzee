@@ -1,7 +1,7 @@
 #include "GameManagement.h"
-#include "ScoreCard.h" 
 #include <time.h>
 #include <iostream>
+#include <string>
 using namespace std;
 
 const int GameManagement::MAX_DICES = 5;
@@ -9,37 +9,51 @@ const int GameManagement::MAX_TURNS = 6;
 const int GameManagement::MAX_ROLLS = 3;
 
 GameManagement::GameManagement() {
-    // Stores the dice rolled values 
-    diceValues = (int*) calloc(MAX_DICES, sizeof(int));
-
-    // Stores if we have locked the dice as a boolean value 
-    lockedDices = (bool*) malloc(sizeof(bool) * MAX_DICES); 
+    // Stores the dice rol values 
+    dices = new vector<Dice*>;
+    
+    // Create the dices and add them into the vector
+    for (int i = 0; i < MAX_DICES; i++) {
+        dices->push_back(new Dice());
+    }
 
     // Create a Scorecard 
     scoreCard = new ScoreCard(); 
-    scoreCard->setDefaultValues();
+    scoreCard->setDefaultValues(); 
 }
 GameManagement::~GameManagement() {
-    free(diceValues);
-    free(lockedDices);
-}
+    // Free each dice 
+    for (int i = 0; i < MAX_DICES; i++) {
+        delete dices->at(i);
+    }
 
-void GameManagement::start(){
+    // Free the dice array
+    delete dices; 
+    dices = nullptr; 
+}
+// Start the application 
+ScoreCard& GameManagement::start(){
     srand(time(nullptr));
+
+    // Set the time for the scorecard
+    scoreCard->setTime(); 
+
+    // For each turn/round ...
     for (int turn = 1; turn <= MAX_TURNS; turn++) {
+        // Display the turn number
         cout << "Turn #" << turn << " of " << MAX_TURNS << endl;
         cout << "------------" << endl << endl;
 
-        setDefaultValues(); // set all dice locked positions to be false
-
+        // For each roll ...
         for (int roll = 1; roll <= MAX_ROLLS; roll++) {
+            // Display the dice number
             cout << "Dice Roll Set #" << roll << " of " << MAX_ROLLS << endl;
             cout << "---------------------" << endl;
 
             scoreCard->displayScoreCard();
 
-            // Roll the Dice
-            rollDice(); 
+            // Roll the Dices
+            rollAllDice(); 
 
             // Display Each Dice
             cout << " Dice 1 \t" << " Dice 2 \t" << " Dice 3 \t" << " Dice 4 \t" << " Dice 5 \t" << endl;
@@ -48,166 +62,189 @@ void GameManagement::start(){
             }
             cout << endl; 
 
-            toggleDice(); 
-            
+            // Check that the roll is not the last, you cannot toggle a dice on the last roll
+            if (roll != MAX_ROLLS) {
+                // Get Input to toggle the dice 
+                getInputToToggleDice();
+            }
+
         }
-
+        // Round/Turn is over, display the options the user can have to score
         displayOptions(); 
-        getScoreOption(); 
 
+        // Get the User to input a score option
+        const int score = getScoreOption(); 
+        
+        // Get how many times that the score is equal to what the user wants 
+        vector<Dice*>::iterator::difference_type result;
+        result = count_if(dices->begin(), dices->end(), [score](Dice* dice) {
+            return (*dice == score); 
+        });
+        
+        // Times the result by the score 
+        result *= score; 
+        
+        // Set the required scorecard's score 
+        scoreCard->setScore(score - 1, result);
 
+        // Set the new total 
+        *scoreCard += result;
+
+        // Unlock the dice 
+        resetAllDice(); 
+
+        cout << endl; 
     }
+
+    // Return the scorecard
+    return *scoreCard; 
 }
 
-// I struggled with this. I spent days trying to solve it and sadly I just gave up in the end -> This is the best I could do. 
+// Display the dice faces to the user
 void GameManagement::displayDiceFaces(const int line) {
-    for (int diceNumber = 1; diceNumber <= MAX_DICES; diceNumber++) {
+    for_each(dices->begin(), dices->end(), [line](Dice* dice) {
         // If the dice has been locked, then we change the symbol
         char symbol = '*';
-        if (lockedDices[diceNumber - 1]) {
+        if (dice->checkIfLocked()) {
             symbol = '#';
         }
-        int dice = diceValues[diceNumber - 1];
-        // Dectect which line we are on 
-        switch(line){
+
+        // Get the dice number
+        int diceValue = dice->getDiceValue();
+
+        // Detect which line we are one and the dice number and print its required section 
+        switch (line) {
         case 1:
-                cout << symbol << symbol << symbol << symbol << symbol << symbol << symbol << symbol << symbol << "\t";
+            cout << symbol << symbol << symbol << symbol << symbol << symbol << symbol << symbol << symbol << "\t";
+            break;
+        case 2:
+            cout << symbol << " ";
+            switch (diceValue) {
+            case 1:
+                cout << "    1 ";
                 break;
-            case 2: 
-                cout << symbol << " ";
-                switch (dice) {
-                    case 1:
-                        cout << "    1 ";
-                        break;
-                    case 2:
-                        cout << "22222 ";
-                        break;
-                    case 3:
-                        cout << "33333 ";
-                        break;
-                    case 4:
-                        cout << "4   4 ";
-                        break;
-                    case 5:
-                        cout << "55555 ";
-                        break;
-                    default:
-                        cout << "66666 ";
-                        break;
-                }
-                cout << symbol << "\t";
-                break; 
-            case 3: 
-                cout << symbol << " ";
-                switch (dice) {
-                    case 1:
-                        cout << "    1 ";
-                        break;
-                    case 2:
-                        cout << "    2 ";
-                        break;
-                    case 3:
-                        cout << "    3 ";
-                        break;
-                    case 4:
-                        cout << "4   4 ";
-                        break;
-                    case 5:
-                        cout << "5     ";
-                        break;
-                    default:
-                        cout << "6     ";
-                        break;
-                }
-                cout << symbol << "\t";
+            case 2:
+                cout << "22222 ";
+                break;
+            case 3:
+                cout << "33333 ";
                 break;
             case 4:
-                cout << symbol << " ";
-                switch (dice) {
-                    case 1:
-                        cout << "    1 ";
-                        break;
-                    case 2:
-                        cout << "22222 ";
-                        break;
-                    case 3:
-                        cout << "  333 ";
-                        break;
-                    case 4:
-                        cout << "44444 ";
-                        break;
-                    case 5:
-                        cout << "55555 ";
-                        break;
-                    default:
-                        cout << "66666 ";
-                        break;
-                }
-                cout << symbol << "\t";
+                cout << "4   4 ";
                 break;
             case 5:
-                cout << symbol << " ";
-                switch (dice) {
-                    case 1:
-                        cout << "    1 ";
-                        break;
-                    case 2:
-                        cout << "    2 ";
-                        break;
-                    case 3:
-                        cout << "    3 ";
-                        break;
-                    case 4:
-                        cout << "    4 ";
-                        break;
-                    case 5:
-                        cout << "    5 ";
-                        break;
-                    default:
-                        cout << "6   6 ";
-                        break;
-                }
-                cout << symbol << "\t";
-                break;
-            case 6:
-                cout << symbol << " ";
-                switch (dice) {
-                    case 1:
-                        cout << "    1 ";
-                        break;
-                    case 2:
-                        cout << "22222 ";
-                        break;
-                    case 3:
-                        cout << "33333 ";
-                        break;
-                    case 4:
-                        cout << "    4 ";
-                        break;
-                    case 5:
-                        cout << "55555 ";
-                        break;
-                    default:
-                        cout << "66666 ";
-                        break;
-                }
-                cout << symbol << "\t";
+                cout << "55555 ";
                 break;
             default:
-                cout << symbol << symbol << symbol << symbol << symbol << symbol << symbol << symbol << symbol << "\t";
+                cout << "66666 ";
                 break;
+            }
+            cout << symbol << "\t";
+            break;
+        case 3:
+            cout << symbol << " ";
+            switch (diceValue) {
+            case 1:
+                cout << "    1 ";
+                break;
+            case 2:
+                cout << "    2 ";
+                break;
+            case 3:
+                cout << "    3 ";
+                break;
+            case 4:
+                cout << "4   4 ";
+                break;
+            case 5:
+                cout << "5     ";
+                break;
+            default:
+                cout << "6     ";
+                break;
+            }
+            cout << symbol << "\t";
+            break;
+        case 4:
+            cout << symbol << " ";
+            switch (diceValue) {
+            case 1:
+                cout << "    1 ";
+                break;
+            case 2:
+                cout << "22222 ";
+                break;
+            case 3:
+                cout << "  333 ";
+                break;
+            case 4:
+                cout << "44444 ";
+                break;
+            case 5:
+                cout << "55555 ";
+                break;
+            default:
+                cout << "66666 ";
+                break;
+            }
+            cout << symbol << "\t";
+            break;
+        case 5:
+            cout << symbol << " ";
+            switch (diceValue) {
+            case 1:
+                cout << "    1 ";
+                break;
+            case 2:
+                cout << "    2 ";
+                break;
+            case 3:
+                cout << "    3 ";
+                break;
+            case 4:
+                cout << "    4 ";
+                break;
+            case 5:
+                cout << "    5 ";
+                break;
+            default:
+                cout << "6   6 ";
+                break;
+            }
+            cout << symbol << "\t";
+            break;
+        case 6:
+            cout << symbol << " ";
+            switch (diceValue) {
+            case 1:
+                cout << "    1 ";
+                break;
+            case 2:
+                cout << "22222 ";
+                break;
+            case 3:
+                cout << "33333 ";
+                break;
+            case 4:
+                cout << "    4 ";
+                break;
+            case 5:
+                cout << "55555 ";
+                break;
+            default:
+                cout << "66666 ";
+                break;
+            }
+            cout << symbol << "\t";
+            break;
+        default:
+            cout << symbol << symbol << symbol << symbol << symbol << symbol << symbol << symbol << symbol << "\t";
+            break;
         }
-    }
-    cout << endl;
-}
 
-void GameManagement::rollDice() {
-    for (int i = 0; i < MAX_DICES; i++) {
-        // Dont roll the dice if its locked
-        if (!lockedDices[i]) {
-            diceValues[i] = rand() % 6 + 1;
-        }
-    }
+    });
+    // New line    
+    cout << endl;
 }
 
 // Display the options to score against 
@@ -219,39 +256,37 @@ void GameManagement::displayOptions() const {
             cout << i << ":\t" << scores[i - 1] << endl;
         }
     }
-
 }
 
-void GameManagement::toggleDice() {
-    int userInput;
-    do {
-        cout << "Enter a dice number to toggle held state. Enter any other number to roll again: ";
-        // Get input from user 
-        cin >> userInput;
+void GameManagement::getInputToToggleDice() {
+    // Check if all the dices have been toggled -> the user will not be able to get the option to toggle a dice
+    if (!all_of(dices->begin(), dices->end(), [](Dice* dice) { return dice->checkIfLocked(); })) {
+        int input; 
+        do {
+            cout << "Enter dice number to toggle held state. Enter any other number to roll again: ";
+            cin >> input;
 
-        switch (userInput) {
-            case 1:
-                lockedDices[0] = true;
-                break;
-            case 2:
-                lockedDices[1] = true;
-                break;
-            case 3:
-                lockedDices[2] = true;
-                break;
-            case 4:
-                lockedDices[3] = true;
-                break;
-            case 5:
-                lockedDices[4] = true;
-                break;
-            case 6:
-                lockedDices[5] = true;
-                break;
-        }
+            if (input > 0 && input <= MAX_DICES) {
+                // User entered a correct range but we need to check if the dice is already toggled 
+                Dice* dice = dices->at(input - 1);
 
-    } while (userInput >= 1 && userInput <= MAX_DICES);
-    cout << endl;
+                if (dice->checkIfLocked()) {
+                    cout << "This dice is already locked. Please enter another dice" << endl;
+                }
+                else {
+                    // Lock the dice 
+                    dice->toggleDice(true);
+                }
+            }
+
+        } while (input > 0 && input <= MAX_DICES); 
+    }
+
+    // All dice toggled, dont ask for input 
+    else {
+        cout << "Cannot lock any more dice as they have all been toggled" << endl; 
+    }
+ 
 }
 
 // Get the User Input to see which dice to score against and checks to see that it is valid 
@@ -263,14 +298,19 @@ const int GameManagement::getScoreOption(){
         cout << "Score against: ";
         cin >> userInput;
           
-        if (!userInput >= 1 && userInput <= MAX_ROLLS) {
+        // Check if the userinput is in the valid parameters 
+        if (userInput <= 0 || userInput > scoreCard->getMaxScores()) {
             // User entered invalid number
+            cout << "Invalid Input. Please enter a number from 1 to 6" << endl; 
             validInput = false; 
         }
-
-        else if (scoreCard->checkIfScored(userInput - 1)) {
+        else if (!scoreCard->checkIfScored(userInput - 1)) {
             // User already entered a value that is already scored
             cout << "You already scored this"  << endl; 
+            validInput = false; 
+        }
+        else {
+            validInput = true;
         }
 
     } while (!validInput);

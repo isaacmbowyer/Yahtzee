@@ -1,7 +1,7 @@
 #include <iostream>
 #include <time.h>
 #include "PlayerManagement.h";
-#include "GameManagement.h"; 
+#include "ScoreCard.h"
 using namespace std;
 
 
@@ -11,19 +11,12 @@ int main() {
     _onexit(_CrtDumpMemoryLeaks);
 #endif*
  
-
-  
-    GameManagement* gameManagment = new GameManagement(); 
-    gameManagment->start(); 
-
-
-    /*
     PlayerManagement* management = new PlayerManagement();
     management->start();
 
-    // Free Management data 
-    delete management; 
-    management = nullptr;
-    */
+     // Free Management data 
+    management->freeMemory(); 
+    management = nullptr; 
+
     return 0;
 }

@@ -1,6 +1,7 @@
 #include "PlayerManagement.h"
 #include "PlayerHistory.h"
 #include <iomanip>
+#include <stdio.h>
 #include <fstream>
 #include <ostream>
 PlayerManagement::PlayerManagement() {
@@ -79,15 +80,18 @@ void PlayerManagement::displayMenu() {
     cout << "9) Exit" << endl;
     cout << endl;
 }
-// Gets the exisiting players inside the csv file 
+// Gets the exisiting players inside the csv file  -> instead of input.eof() just simply do a loop in the operator overload and check if the string is equal to NULL
 void PlayerManagement::getExistingPlayers() {
     ifstream input(PLAYERS_FILE);
 
     if (input.is_open()) {
-        // While there are lines in the file
-        while (!input.eof()) {
+        // Get the number of players in the csv file 
+        int numberOfPlayers = 0;
+        input >> &numberOfPlayers;
+
+        for (int i = 1; i <= numberOfPlayers; i++) {
             // Retieving and setting data from file
-            input >> *this;
+            input >> *this; 
         }
 
         input.close();  // close file stream 
@@ -101,6 +105,9 @@ void PlayerManagement::getExistingPlayers() {
 void PlayerManagement::writeExistingPlayers() {
     ofstream output(PLAYERS_FILE);
     if (output.is_open()) {
+        // Write how many players there are in the csv file 
+        output << *this;
+        
         // Use a for each algorithm to iterate over players vector and use a lambda to write that player details onto the file 
         for_each(players->begin(), players->end(), [&output](Player* player) {
             output << *player; // operator overload to write player to file 
@@ -144,6 +151,17 @@ const vector<string> PlayerManagement::getPlayerData() const {
     // Store player data inside a vector on the heap
     vector<string> playerData;
     playerData.push_back(username);
+    
+    // Lower case the string username 
+    string lowerCaseUsername = username; 
+    for_each(lowerCaseUsername.begin(), lowerCaseUsername.end(), [](char& character) {
+        character = tolower(character);
+    });
+
+    // Add it into the vector
+    playerData.push_back(lowerCaseUsername);
+
+    // Push password into the vector 
     playerData.push_back(password);
 
     return playerData;
@@ -156,18 +174,24 @@ void  PlayerManagement::choosePlayer() {
     vector<string> player = getPlayerData();
 
     int index = -1; // added to 0 at the lambda 
+
     // Using a find_if algorithm and a lamda expression to find the first match where a player in the vector is equal to our inputted player 
     vector<Player*>::iterator it = find_if(players->begin(), players->end(), [&player, &index](Player* currentPlayer) { // pass in the index so we know where the player is located 
         ++index; // go to the next index 
       
-         // Get the username and password from the vector and compare with current player from vector 
-        return (*currentPlayer == player.at(0).c_str()) && (*currentPlayer == player.at(1));  // operater overloading 
+         // Get the lower cased username and password from the vector and compare with current player from vector 
+        return (*currentPlayer == player.at(1).c_str()) && (*currentPlayer == player.at(2));  // operater overloading 
     });
 
     if (it != players->end()) {
         // Get player history  
-        PlayerHistory* playerHistory = new PlayerHistory(players->at(index));
-        playerHistory->start(); 
+        const string PLAYER_FILE = player.at(0) + ".csv";
+        PlayerHistory* playerHistory = new PlayerHistory(players->at(index), PLAYER_FILE);
+        playerHistory->start();
+
+        // Free player history
+        playerHistory->freeMemory();
+        playerHistory = nullptr; 
     }
 
     else {
@@ -177,21 +201,30 @@ void  PlayerManagement::choosePlayer() {
 
 }
 
-
 // Remove a player from the players vector 
 void PlayerManagement::removePlayer() {
     // Get the player username and password 
     vector<string> player = getPlayerData();
 
-    // Using a find_if algorithm and a lamda expression to find the first match where a player in the vector is equal to our inputted player to delete 
-    vector<Player*>::iterator it = find_if(players->begin(), players->end(), [&player](Player* currentPlayer) { 
-        // Get the username and password from the vector and compare with current player from vector 
-        return (*currentPlayer == player.at(0).c_str()) && (*currentPlayer == player.at(1));  // operater overloading 
+    int index = -1; // added to 0 at the lambda 
+
+      // Using a find_if algorithm and a lamda expression to find the first match where a player in the vector is equal to our inputted player  to delete 
+    vector<Player*>::iterator it = find_if(players->begin(), players->end(), [&player, &index](Player* currentPlayer) { // pass in the index so we know where the player is located 
+        ++index; // go to the next index 
+
+         // Get the lower cased username and password from the vector and compare with current player from vector 
+        return (*currentPlayer == player.at(1).c_str()) && (*currentPlayer == player.at(2));  // operater overloading 
     });
 
     if (it != players->end()) {
-        // Delete the player from the record 
-        players->erase(it);
+        // Delete the player csv file 
+        remove((player.at(0) + ".csv").c_str());
+
+        // Delete the players's data 
+        delete players->at(index);
+
+        // Delete the player from the vector
+        players->erase(it); 
     }
     else {
         // Error message 
@@ -206,13 +239,13 @@ void PlayerManagement::addPlayer() {
 
     // Using a find_if algorithm and a lamda expression to find the first match where if a players whose username is equal to our inputted username, it will be invalid 
     vector<Player*>::iterator it = find_if(players->begin(), players->end(), [&player](Player* currentPlayer) {
-        // Get the username and password from the vector and compare with current player from vector 
-        return (*currentPlayer == player.at(0).c_str()); // operaotor overloading 
+        // Get the lower cased username from the vector and compare with current player from vector 
+        return (*currentPlayer == player.at(1).c_str()); // operaotor overloading 
     });
 
     if (it == players->end()) {
         // Create the player and add to the vector of players 
-        players->push_back(new Player(player.at(0), player.at(1)));
+        players->push_back(new Player(player.at(0), player.at(2)));
     }
     else {
         // Error message 

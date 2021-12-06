@@ -27,10 +27,13 @@
     <ClCompile Include="PlayerHistory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ScoreCard.cpp">
+    <ClCompile Include="GameManagement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameManagement.cpp">
+    <ClCompile Include="Dice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreCard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,10 +47,13 @@
     <ClInclude Include="PlayerHistory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ScoreCard.h">
+    <ClInclude Include="GameManagement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameManagement.h">
+    <ClInclude Include="Dice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreCard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
