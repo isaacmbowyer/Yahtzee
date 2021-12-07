@@ -66,7 +66,7 @@ inline istream& operator>>(istream& is, int* numberOfPlayers) {
 inline ostream& operator<<(ostream& os, PlayerManagement& management) {
     int numberOfPlayers = management.players->size();  // get number of players
 
-    os << numberOfPlayers << endl; // write it to the file 
+    os << numberOfPlayers << endl; // write the number of players to the file 
 
     return os;
 }

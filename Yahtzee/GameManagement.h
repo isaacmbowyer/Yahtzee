@@ -25,17 +25,18 @@ private:
     static const int MAX_ROLLS; 
 };
 
-// Roll all dices
+// Roll all dices using for_each 
 inline void GameManagement::rollAllDice() {
     for_each(dices->begin(), dices->end(), [](Dice* dice) {
+        // Get the actual dice to roll itself
         dice->roll(); 
     });
 }
 
-// Loop through the dice to unlock them 
+// Unlock each dice using for_each
 inline void GameManagement::resetAllDice() {
     for_each(dices->begin(), dices->end(), [](Dice* dice) {
-        // Unlock the dice 
+        // Get the actual dice to unlock itself 
         dice->toggleDice(false);
     });
 }

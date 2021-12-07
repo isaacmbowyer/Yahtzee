@@ -29,10 +29,10 @@ private:
     static const int MAX_HISTORIC_DATA;
 };
 
-// I was going to do this via operator overload based on the game management class however, i figured that the game management class should not control the player history -> only the game 
+// Sets the new game history in the array 
 inline void PlayerHistory::setNewGameHistory(const int newScore) {
     // Increment total score
-    gameHistory[0]++;
+    gameHistory[0]++; 
 
     // Increment accumulated score
     gameHistory[1] += newScore; 

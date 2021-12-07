@@ -74,6 +74,7 @@ void PlayerHistory::start() {
         cout << endl;
     } while (chosenOption != 9);
 
+    // Save all the data to the csv file 
     writePlayerHistory(); 
 }
 

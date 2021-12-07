@@ -77,9 +77,10 @@ ScoreCard& GameManagement::start(){
         // Get the User to input a score option
         const int score = getScoreOption(); 
         
-        // Get how many times that the score is equal to what the user wants 
+        // Get the number of times a dice has a value equal to the inputted score from user 
         vector<Dice*>::iterator::difference_type result;
         result = count_if(dices->begin(), dices->end(), [score](Dice* dice) {
+            // Check if that dice is equal to the score
             return (*dice == score); 
         });
         
@@ -92,7 +93,7 @@ ScoreCard& GameManagement::start(){
         // Set the new total 
         *scoreCard += result;
 
-        // Unlock the dice 
+        // Unlock all the dice 
         resetAllDice(); 
 
         cout << endl; 

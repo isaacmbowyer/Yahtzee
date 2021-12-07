@@ -32,6 +32,12 @@ private:
 };
 
 
+// Free username and password
+inline Player::~Player() {
+    free(username);
+    free(password);
+}
+
 // Unencrypt the password by subtracting 1 ASCII to each char
 inline void Player::decryptPassword() {
     for (int i = 0; i < strlen(password); i++) {
@@ -70,12 +76,6 @@ inline const string Player::convertToLowerCase() const {
     return lowerCaseUsername; 
 }
 
-// Free username and password
-inline Player::~Player() {
-    free(username);
-    free(password);
-}
-
 // Return the player username 
 inline const char* Player::getUsername() const {
     return username;
@@ -92,7 +92,7 @@ inline const bool Player::operator==(const char* username) const {
     return (strcmp(convertToLowerCase().c_str(), username) == 0); //  check if there is a match 
 }
 
-// Checks to see if the player username is equal to our inputted password
+// Checks to see if the player's password is equal to our inputted password
 inline const bool Player::operator==(const string& password) const {
     return (strcmp(this->password, password.c_str()) == 0); //  check if there is a match  
 }
