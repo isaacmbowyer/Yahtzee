@@ -1,5 +1,6 @@
 #include "Player.h"
 
+
 Player::Player(string& username, string& password, int highScore) : highScore(highScore) {
     // Allocate memory for username  and password 
     this->username = (char*) malloc(sizeof(char) * (username.length() + 1));

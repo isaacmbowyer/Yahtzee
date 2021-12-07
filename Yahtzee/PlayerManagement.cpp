@@ -4,6 +4,11 @@
 #include <stdio.h>
 #include <fstream>
 #include <ostream>
+#include <assert.h>
+
+const int PlayerManagement::MAX_CHARACTERS = 20;
+const int PlayerManagement::MIN_CHARACTERS = 4;
+
 PlayerManagement::PlayerManagement() {
     // Store player objects as a vector of pointers to vechiles
     players = new vector<Player*>; 
@@ -135,18 +140,38 @@ void PlayerManagement::displayExistingPlayers() {
     cout << endl;
 }
 
+// Gets a valid input for the player username/password 
+const string PlayerManagement::getValidInput(string& field) const {
+    assert(field == "username" || field == "password");
+
+    bool validInput = false;
+    string input;
+    do {
+        // Get the players username/password 
+        cout << "Please enter player " << field << ": "; 
+        getline(cin, input);
+
+        // Check that the length is a valid parameter 
+        if (input.length() >= MIN_CHARACTERS && input.length() <= MAX_CHARACTERS) {
+            validInput = true;
+        }
+        else { 
+            cout << "Length of " << field << " must be between " << MIN_CHARACTERS << " and " << MAX_CHARACTERS << endl;
+        }
+
+    } while (!validInput);
+    return input;
+}
+
 // Get the user to input a players username and password 
 const vector<string> PlayerManagement::getPlayerData() const {
-    string username;
-    string password;
-  
     // Get the username 
-    cout << "Please enter player username: ";
-    getline(cin, username);
+    string text = "username"; 
+    const string username = getValidInput(text);
 
     // Get the password
-    cout << "Please enter player password: ";
-    getline(cin, password);
+    text = "password";
+    const string password = getValidInput(text);
 
     // Store player data inside a vector on the heap
     vector<string> playerData;
@@ -167,6 +192,7 @@ const vector<string> PlayerManagement::getPlayerData() const {
     return playerData;
 
 }
+
 
 // Gets the user to pick a player from the vector 
 void  PlayerManagement::choosePlayer() {

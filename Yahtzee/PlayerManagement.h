@@ -15,6 +15,7 @@ public:
     void writeExistingPlayers();
     void displayExistingPlayers();
     void freeMemory();
+    const string getValidInput(string& field) const; 
 
     const vector<string> getPlayerData() const;
     void choosePlayer();
@@ -31,6 +32,8 @@ public:
 private:
    vector<Player*>* players;
    const string PLAYERS_FILE = "players.csv";
+   static const int MAX_CHARACTERS;
+   static const int MIN_CHARACTERS;
 };
 
 

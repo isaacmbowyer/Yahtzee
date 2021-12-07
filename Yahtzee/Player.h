@@ -82,7 +82,7 @@ inline const char* Player::getUsername() const {
 }
 
 // Set the new highScore
-inline void Player::setHighScore(const int highScore) {
+inline void Player::setHighScore(const int highScore) { 
     this->highScore = highScore; 
 }
 

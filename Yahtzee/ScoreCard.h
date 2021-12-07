@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <assert.h>
 using namespace std;
 class ScoreCard
 {
@@ -78,6 +79,8 @@ inline void ScoreCard::setDefaultValues() {
 
 // Set the value for the required score card
 inline void ScoreCard::setScore(const int index, const int value) {
+    assert(index < MAX_SCORES);
+
     scores[index] = value;
 }
 

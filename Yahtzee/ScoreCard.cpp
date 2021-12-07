@@ -7,6 +7,8 @@ const int ScoreCard::MAX_SCORES = 7;
 
 // Display the scorecard, game number and the date for an ALREADY existing game history 
 void ScoreCard::displayScoreCard(int gameNumber, const int MAX_GAMES) const {
+    assert(gameNumber <= MAX_GAMES);
+
     // Display the Game Number 
     cout << "Game: " << gameNumber << " of " << MAX_GAMES << endl;
 

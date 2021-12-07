@@ -2,6 +2,7 @@
 #include <time.h>
 #include <iostream>
 #include <string>
+#include <assert.h>
 using namespace std;
 
 const int GameManagement::MAX_DICES = 5;
@@ -102,6 +103,8 @@ ScoreCard& GameManagement::start(){
 
 // Display the dice faces to the user
 void GameManagement::displayDiceFaces(const int line) {
+    assert(line >= 1 && line <= 7);
+
     for_each(dices->begin(), dices->end(), [line](Dice* dice) {
         // If the dice has been locked, then we change the symbol
         char symbol = '*';
