@@ -43,11 +43,12 @@ ScoreCard& GameManagement::start(){
     for (int turn = 1; turn <= MAX_TURNS; turn++) {
         // Display the turn number
         cout << "Turn #" << turn << " of " << MAX_TURNS << endl;
-        cout << "------------" << endl << endl;
+        cout << "------------" << endl;
 
         // For each roll ...
         for (int roll = 1; roll <= MAX_ROLLS; roll++) {
             // Display the dice number
+            cout << endl; 
             cout << "Dice Roll Set #" << roll << " of " << MAX_ROLLS << endl;
             cout << "---------------------" << endl;
 
