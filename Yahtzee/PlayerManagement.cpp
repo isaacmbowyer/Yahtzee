@@ -199,17 +199,10 @@ void  PlayerManagement::choosePlayer() {
     // Get the player username and password 
     vector<string> player = getPlayerData();
 
-    int index = -1; // added to 0 at the lambda 
+    // Check to see if the player exists in our vector 
+    const int index = findExistingPlayer(player);
 
-    // Using a find_if algorithm and a lamda expression to find the first match where a player in the vector is equal to our inputted player 
-    vector<Player*>::iterator it = find_if(players->begin(), players->end(), [&player, &index](Player* currentPlayer) { // pass in the index so we know where the player is located 
-        ++index; // go to the next index 
-      
-         // Get the lower cased username and password from the vector and compare with current player from vector 
-        return (*currentPlayer == player.at(1).c_str()) && (*currentPlayer == player.at(2));  // operater overloading 
-    });
-
-    if (it != players->end()) {
+    if (index != -1) {
         // Get player history  
         const string PLAYER_FILE = player.at(0) + ".csv";
         PlayerHistory* playerHistory = new PlayerHistory(players->at(index), PLAYER_FILE);
@@ -232,17 +225,10 @@ void PlayerManagement::removePlayer() {
     // Get the player username and password 
     vector<string> player = getPlayerData();
 
-    int index = -1; // added to 0 at the lambda 
+    // Check to see if the player exists in our vector 
+    const int index = findExistingPlayer(player);
 
-      // Using a find_if algorithm and a lamda expression to find the first match where a player in the vector is equal to our inputted player  to delete 
-    vector<Player*>::iterator it = find_if(players->begin(), players->end(), [&player, &index](Player* currentPlayer) { // pass in the index so we know where the player is located 
-        ++index; // go to the next index 
-
-         // Get the lower cased username and password from the vector and compare with current player from vector 
-        return (*currentPlayer == player.at(1).c_str()) && (*currentPlayer == player.at(2));  // operater overloading 
-    });
-
-    if (it != players->end()) {
+    if (index != -1) {
         // Delete the player csv file 
         remove((player.at(0) + ".csv").c_str());
 
@@ -250,7 +236,7 @@ void PlayerManagement::removePlayer() {
         delete players->at(index);
 
         // Delete the player from the vector
-        players->erase(it); 
+        players->erase(players->begin() + index); 
     }
     else {
         // Error message 
