@@ -173,7 +173,9 @@ void PlayerHistory::displayPlayerHistory()  const {
 } 
 
 
-// Get the Number of Games, Accumulated Score & Average Score from the player file 
+// Get the Number of Games, Accumulated Score & Average
+
+Score from the player file 
 void PlayerHistory::getPlayerStats() {
 
     ifstream input(PLAYER_FILE);
